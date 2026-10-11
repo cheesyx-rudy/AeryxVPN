@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse, base64, json, re, urllib.parse, urllib.request
+import argparse, base64, json, re, socket, ipaddress, urllib.parse, urllib.request
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 
@@ -7,6 +7,8 @@ BASE_DIR = Path(__file__).resolve().parent
 SOURCES_FILE = BASE_DIR / "proxy_sources.txt"
 OUTPUT_FILE = BASE_DIR / "proxies.txt"
 MAX_BYTES = 20 * 1024 * 1024
+MAX_CONFIGS = 1000
+GEO_BATCH_SIZE = 100
 
 URI_RE = re.compile(
     r"(?i)\b(?:vless|vmess|trojan|ss|ssr|hysteria2?|hy2|tuic|anytls|socks5?|http)://[^\s<>\"']+"
@@ -73,8 +75,116 @@ def is_mlkem_encryption_proxy(uri):
         pass
     return False
 
+def _flag(country_code):
+    code = (country_code or "").upper()
+    if len(code) != 2 or not code.isalpha():
+        return "🌐"
+    return "".join(chr(0x1F1E6 + ord(char) - ord("A")) for char in code)
+
+
+def _host_from_uri(uri):
+    """Return the host from a supported proxy URI, including VMess JSON links."""
+    try:
+        parsed = urllib.parse.urlsplit(uri.split("#", 1)[0])
+        if parsed.scheme.lower() == "vmess":
+            payload = (parsed.netloc + parsed.path).strip()
+            payload = urllib.parse.unquote(payload)
+            obj = json.loads(base64.urlsafe_b64decode(payload + "=" * (-len(payload) % 4)))
+            if isinstance(obj, dict):
+                host = obj.get("add") or obj.get("address") or obj.get("server")
+                return str(host).strip() if host else None
+        return parsed.hostname
+    except Exception:
+        return None
+
+
+def _public_ip_for_host(host):
+    if not host:
+        return None
+    try:
+        ip = ipaddress.ip_address(host)
+        return str(ip) if ip.is_global else None
+    except ValueError:
+        pass
+    try:
+        answers = socket.getaddrinfo(host, None, type=socket.SOCK_STREAM)
+        for answer in answers:
+            candidate = answer[4][0].split("%", 1)[0]
+            try:
+                ip = ipaddress.ip_address(candidate)
+                if ip.is_global:
+                    return str(ip)
+            except ValueError:
+                continue
+    except Exception as exc:
+        print(f"[GEO DNS ERROR] {host}: {exc}")
+    return None
+
+
+def _lookup_countries(ip_addresses):
+    """Look up countries in batches to avoid one API request per config."""
+    result = {}
+    ips = list(dict.fromkeys(ip_addresses))
+    for start in range(0, len(ips), GEO_BATCH_SIZE):
+        batch = ips[start:start + GEO_BATCH_SIZE]
+        if not batch:
+            continue
+        endpoint = "http://ip-api.com/batch?fields=status,message,query,country,countryCode"
+        body = json.dumps([{"query": ip} for ip in batch]).encode("utf-8")
+        request = urllib.request.Request(
+            endpoint,
+            data=body,
+            headers={"Content-Type": "application/json", "User-Agent": "LIKVID-VPN-subscription-parser/1.0"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=25) as response:
+                rows = json.loads(response.read().decode("utf-8", errors="replace"))
+            for row in rows if isinstance(rows, list) else []:
+                if row.get("status") == "success" and row.get("query") and row.get("country"):
+                    result[row["query"]] = (row.get("countryCode", ""), row["country"])
+            print(f"[GEO] looked up {len(batch)} IP addresses")
+        except Exception as exc:
+            print(f"[GEO ERROR] batch {start // GEO_BATCH_SIZE + 1}: {exc}")
+    return result
+
+
+def add_country_labels(proxies):
+    """Store a stable country label in each snapshot entry; numbering is added later."""
+    hosts = [_host_from_uri(uri) for uri in proxies]
+    host_to_ip = {}
+    for host in dict.fromkeys(h for h in hosts if h):
+        host_to_ip[host] = _public_ip_for_host(host)
+    countries = _lookup_countries(ip for ip in host_to_ip.values() if ip)
+
+    labelled = []
+    counts = {}
+    for uri, host in zip(proxies, hosts):
+        ip = host_to_ip.get(host) if host else None
+        country_code, country = countries.get(ip, ("", "Unknown")) if ip else ("", "Unknown")
+        flag = _flag(country_code)
+        if country == "Unknown":
+            flag = "🌐"
+        counts[country] = counts.get(country, 0) + 1
+        label = f"{flag} Cluster {country}"
+        labelled.append(uri.split("#", 1)[0] + "#" + urllib.parse.quote(label, safe=""))
+    summary = ", ".join(f"{name}: {count}" for name, count in sorted(counts.items()))
+    print(f"[GEO] country distribution: {summary or 'no configs'}")
+    return labelled
+
+
 def rename_uri(uri, number):
-    label = f"Cluster | Кластер #{number}"
+    # The snapshot stores the country label without a number so cleanup keeps
+    # the original numbering and does not need to contact the geolocation API.
+    existing = uri.split("#", 1)[1] if "#" in uri else ""
+    try:
+        label = urllib.parse.unquote(existing)
+    except Exception:
+        label = ""
+    if not label or "Cluster " not in label:
+        label = "🌐 Cluster Unknown"
+    label = re.sub(r"\s+#?\d+$", "", label).strip()
+    label = f"{label} #{number}"
     return uri.split("#", 1)[0] + "#" + urllib.parse.quote(label, safe="")
 
 def load_dead_numbers():
@@ -175,9 +285,13 @@ def main():
                 print(f"[SOURCE ERROR] {source}: {e}")
 
         print(f"[FILTER] skipped {mlkem_skipped} ML-KEM encryption proxies")
+        if len(unique) > MAX_CONFIGS:
+            print(f"[LIMIT] found {len(unique)} configs; keeping first {MAX_CONFIGS}")
+            unique = unique[:MAX_CONFIGS]
 
-        # Freeze exactly this order. Happ checks these numbers, and the
-        # cleanup run must use this same snapshot without reparsing sources.
+        # Freeze order and country labels together. Cleanup uses this snapshot,
+        # so dead.txt numbers stay aligned and no geolocation calls are needed.
+        unique = add_country_labels(unique)
         write_snapshot(unique)
         print(f"[SNAPSHOT] saved {len(unique)} proxy URLs to parsed_proxies.txt")
 
@@ -186,10 +300,10 @@ def main():
     updated = (datetime.now(timezone.utc) + timedelta(hours=3)).strftime("%d.%m.%Y %H:%M")
 
     header = (
-        "#subscription-userinfo: upload=0; download=0; total=0; expire=2524608000\n"
-        "#profile-title: LIKVID VPN\n"
+        "#subscription-userinfo: upload=1073741824000; download=0; total=1073741824000; expire=2524608000\n"
+        "#profile-title: rudy and cheesyx\n"
         "#profile-update-interval: 1\n"
-        f"#announce: вся важная информация в канале @LIKVID_VPN // авторы @rudy_bd @cheesyx // обновлено: {updated} | конфигов: {len(output)}"
+        f"#announce: вся важная информация в канале @Parser_url // авторы @rudy_bd @cheesyx // обновлено: {updated} | конфигов: {len(output)}"
     )
 
     result = header + "\n" + "\n".join(output)
