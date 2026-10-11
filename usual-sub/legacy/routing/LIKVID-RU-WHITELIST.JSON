@@ -1,5 +1,5 @@
 {
-  "Name": "LIKVID VPN RU + Whitelist",
+  "Name": "LIKVID VPN — MosHub RU + Whitelist",
   "GlobalProxy": "true",
   "UseChunkFiles": "true",
   "RemoteDns": "8.8.8.8",
@@ -10,14 +10,14 @@
   "DomesticDNSType": "DoH",
   "DomesticDNSDomain": "https://77.88.8.8/dns-query",
   "DomesticDNSIP": "77.88.8.8",
-  "Geoipurl": "https://cdn.jsdelivr.net/gh/hydraponique/roscomvpn-geoip/release/geoip.dat",
-  "Geositeurl": "https://cdn.jsdelivr.net/gh/hydraponique/roscomvpn-geosite/release/geosite.dat",
-  "LastUpdated": "1791727304",
+  "Geoipurl": "https://cdn.jsdelivr.net/gh/hydraponique/roscomvpn-geoip@202609260832/release/geoip.dat",
+  "Geositeurl": "https://cdn.jsdelivr.net/gh/hydraponique/roscomvpn-geosite@202604152235/release/geosite.dat",
+  "LastUpdated": "1791733038",
   "DnsHosts": {
     "lkfl2.nalog.ru": "213.24.64.175",
     "lknpd.nalog.ru": "213.24.64.181"
   },
-  "RouteOrder": "block-proxy-direct",
+  "RouteOrder": "block-direct-proxy",
   "DirectSites": [
     "geosite:private",
     "geosite:whitelist",
