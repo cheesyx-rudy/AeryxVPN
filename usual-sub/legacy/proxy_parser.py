@@ -10,6 +10,40 @@ MAX_BYTES = 20 * 1024 * 1024
 MAX_CONFIGS = 1000
 GEO_BATCH_SIZE = 100
 
+# Happ routing profile source of truth. Keep the JSON file and embedded deeplink
+# synchronized on every subscription build so existing Happ profiles can be
+# overwritten when users refresh the subscription.
+ROUTING_JSON_FILE = BASE_DIR / "routing" / "LIKVID-RU-WHITELIST.JSON"
+ROUTING_DEEPLINK_FILE = BASE_DIR / "routing" / "LIKVID-RU-WHITELIST.DEEPLINK"
+
+def build_happ_routing_link():
+    if not ROUTING_JSON_FILE.exists():
+        raise SystemExit(f"Happ routing profile not found: {ROUTING_JSON_FILE}")
+    raw_profile = ROUTING_JSON_FILE.read_text(encoding="utf-8").strip()
+    # Recover from older runs that accidentally wrote the two literal
+    # characters "\\n" instead of a real newline at the end of the file.
+    if raw_profile.endswith(r"\n"):
+        raw_profile = raw_profile[:-2].rstrip()
+    profile = json.loads(raw_profile)
+    if not isinstance(profile, dict):
+        raise SystemExit("Happ routing profile must be a JSON object")
+
+    # Force refresh of geo files when a user refreshes the subscription.
+    # Happ itself rate-limits geo file downloads (documented by Happ).
+    profile["LastUpdated"] = str(int(datetime.now(timezone.utc).timestamp()))
+
+    encoded = base64.b64encode(
+        json.dumps(profile, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    ).decode("ascii")
+    link = "happ://routing/onadd/" + encoded
+
+    ROUTING_JSON_FILE.write_text(
+        json.dumps(profile, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8"
+    )
+    ROUTING_DEEPLINK_FILE.write_text(link + "\n", encoding="utf-8")
+    return link
+
 URI_RE = re.compile(
     r"(?i)\b(?:vless|vmess|trojan|ss|ssr|hysteria2?|hy2|tuic|anytls|socks5?|http)://[^\s<>\"']+"
 )
@@ -306,7 +340,11 @@ def main():
         f"#announce: вся важная информация в канале @LIKVID_VPN // авторы @rudy_bd @cheesyx // обновлено: {updated} | конфигов: {len(output)}"
     )
 
-    result = header + "\n" + "\n".join(output)
+    # Happ recognizes this deeplink when it appears in the subscription body.
+    # Put it after metadata headers and before proxy URIs; ordinary URI extraction
+    # ignores happ:// links, while Happ uses it to attach/activate routing.
+    happ_routing_link = build_happ_routing_link()
+    result = header + "\n" + happ_routing_link + "\n" + "\n".join(output)
 
     tmp = OUTPUT_FILE.with_suffix(".tmp")
     tmp.write_text(result + ("\n" if output else ""), encoding="utf-8")
