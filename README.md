@@ -30,7 +30,6 @@ https://hub.mos.ru/cheesyx/cheesyx-rudy/raw/main/usual-sub/proxies.txt
 
 [Открыть подписку на MosHub](https://hub.mos.ru/cheesyx/cheesyx-rudy/raw/main/usual-sub/proxies.txt)
 
-> Это две отдельные ссылки на подписки. Дополнительная подписка на MosHub сохранена; её адрес относится к размещённому там проекту и не меняется из-за переименования этого GitHub-репозитория.
 
 ## ⚙️ Как это работает
 
