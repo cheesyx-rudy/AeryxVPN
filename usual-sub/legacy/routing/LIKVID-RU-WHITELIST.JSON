@@ -1,5 +1,5 @@
 {
-  "Name": "LIKVID VPN — MosHub RU + Whitelist",
+  "Name": "LIKVID VPN RU + Whitelist",
   "GlobalProxy": "true",
   "UseChunkFiles": "true",
   "RemoteDns": "8.8.8.8",
