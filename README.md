@@ -1,189 +1,100 @@
-# 🔗 rudy and cheesyx
+# 🟡 LIKVID VPN
 
 **Бесплатная агрегированная подписка с прокси-конфигурациями.**
 
-Сбор конфигураций из открытых источников → обработка → готовые подписки.
+Парсер собирает конфигурации из открытых источников, удаляет дубликаты и формирует единый список для импорта в совместимые VPN-клиенты.
 
 ## 📦 Подписки
 
-### `usual-sub/legacy/proxies.txt` — Proxy URL
+### Основная подписка — GitHub
 
-Список отдельных прокси-конфигураций в URI-формате.
+Список прокси-конфигураций в URI-формате. Подписка формируется парсером и обновляется через GitHub Actions.
 
-**Подписка:**
-
-```text
-https://raw.githubusercontent.com/cheesyx-rudy/cheesyx-rudy/refs/heads/main/usual-sub/legacy/proxies.txt
-```
-
-[Открыть usual-sub/legacy/proxies.txt](https://raw.githubusercontent.com/cheesyx-rudy/cheesyx-rudy/refs/heads/main/usual-sub/legacy/proxies.txt)
-
-### `clash-sub/config.yaml` — Mihomo / Clash Meta
-
-Готовая YAML-подписка для клиентов на базе Mihomo / Clash Meta.
-
-**Подписка:**
+**Ссылка на подписку:**
 
 ```text
-https://raw.githubusercontent.com/cheesyx-rudy/cheesyx-rudy/refs/heads/main/clash-sub/config.yaml
+https://raw.githubusercontent.com/cheesyx-rudy/LIKVID-VPN/refs/heads/main/usual-sub/legacy/proxies.txt
 ```
 
-[Открыть clash-sub/config.yaml](https://raw.githubusercontent.com/cheesyx-rudy/cheesyx-rudy/refs/heads/main/clash-sub/config.yaml)
+[Открыть подписку](https://raw.githubusercontent.com/cheesyx-rudy/LIKVID-VPN/refs/heads/main/usual-sub/legacy/proxies.txt)
 
+### Дополнительная подписка — MosHub
 
-### `usual-sub/proxies.txt` — Подписка обновляемая при белых списках, развернута на hub.mos.ru
+Дополнительная подписка, размещённая на MosHub и предназначенная для случаев, когда доступ к обычным ресурсам GitHub ограничен, но MosHub доступен через действующие белые списки. Частота обновления конфигураций зависит от запуска парсера и может быть ниже, чем у основной подписки.
 
-Подписка, которая автоматически обновляется при изменениях в белых списках.
-
-**Подписка:**
+**Ссылка на подписку:**
 
 ```text
 https://hub.mos.ru/cheesyx/cheesyx-rudy/raw/main/usual-sub/proxies.txt
 ```
 
-[Открыть usual-sub/proxies.txt](https://hub.mos.ru/cheesyx/cheesyx-rudy/raw/main/usual-sub/proxies.txt)
+[Открыть подписку на MosHub](https://hub.mos.ru/cheesyx/cheesyx-rudy/raw/main/usual-sub/proxies.txt)
+
+> Это две отдельные ссылки на подписки. Дополнительная подписка на MosHub сохранена; её адрес относится к размещённому там проекту и не меняется из-за переименования этого GitHub-репозитория.
 
 ## ⚙️ Как это работает
 
-```text
-┌──────────────────────┐
-│  Источники конфигов  │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│       Парсер         │
-│  сбор и обработка    │
-└──────────┬───────────┘
-           │
-           ├───────────────► usual-sub/legacy/proxies.txt
-           │
-           └───────────────► clash-sub/config.yaml
-```
+1. Парсер получает конфигурации из источников, перечисленных в `usual-sub/legacy/proxy_sources.txt`.
+2. Извлекает поддерживаемые URI, удаляет дубликаты и отфильтровывает некоторые несовместимые конфигурации.
+3. Сохраняет снимок в `usual-sub/legacy/parsed_proxies.txt`, чтобы режим очистки мог использовать тот же список.
+4. Формирует итоговую подписку `usual-sub/legacy/proxies.txt`.
 
-Обновление автоматизируется через **GitHub Actions**. Парсеры получают конфигурации из указанных источников, обрабатывают их, удаляют дубликаты и формируют готовые файлы подписок. Обычная подписка собирается в `usual-sub/legacy/`, а Clash/Mihomo — в `clash-sub/`.
+Для ручного запуска используется GitHub Actions. В workflow также настроен запуск по расписанию; доступны режимы `fresh` и `cleanup`.
 
-> Подписка является агрегатором конфигураций из сторонних источников. Мы не являемся владельцами всех размещённых конфигураций и не гарантируем постоянную работоспособность каждого отдельного узла.
+- `fresh` — заново получить конфигурации из источников и сформировать новый список.
+- `cleanup` — удалить номера конфигураций, перечисленные в `usual-sub/legacy/dead.txt`, используя сохранённый снимок без повторной загрузки источников.
 
-## 🧩 Поддерживаемые форматы
+## 🔌 Поддерживаемые URI
 
-В зависимости от источника и клиента могут встречаться:
+Парсер умеет извлекать ссылки следующих типов, если они присутствуют в источниках:
 
 - VLESS
 - VMess
 - Trojan
-- Shadowsocks
-- ShadowsocksR
+- Shadowsocks (`ss`)
+- ShadowsocksR (`ssr`)
 - Hysteria / Hysteria2
 - TUIC
 - AnyTLS
-- SOCKS
+- SOCKS / SOCKS5
 - HTTP
 
-Некоторые конфигурации могут быть несовместимы с конкретным клиентом или перестать работать со временем.
+Поддержка конкретной ссылки зависит также от VPN-клиента и его версии. Наличие ссылки в подписке не гарантирует, что сервер работает.
 
-# 📱 Клиенты
+## 📱 Клиенты
 
-Ниже — популярные клиенты, которые можно скачать из официальных GitHub Releases.
+Используйте клиент, который поддерживает нужные вам типы URI. Загружайте приложения только из официальных источников.
 
-> **Совет:** скачивайте приложения только из официальных репозиториев разработчиков. Не используйте случайные APK/EXE из сторонних сайтов.
+### Windows / macOS / Linux
 
-## 🪟 Windows / 🍎 macOS / 🐧 Linux
+- [v2rayN — загрузки и исходный код](https://github.com/2dust/v2rayN/releases)
+- [Hiddify — загрузки и исходный код](https://github.com/hiddify/hiddify-app/releases)
 
-### v2rayN
+### Android
 
-GUI-клиент для Windows, Linux и macOS с поддержкой Xray, sing-box и других ядер.
+- [v2rayNG — загрузки и исходный код](https://github.com/2dust/v2rayNG/releases)
+- [Hiddify — загрузки и исходный код](https://github.com/hiddify/hiddify-app/releases)
+- [NekoBox for Android — проект Starifly](https://github.com/starifly/NekoBoxForAndroid)
 
-- [Скачать](https://github.com/2dust/v2rayN/releases)
-- [Репозиторий](https://github.com/2dust/v2rayN)
+### iOS
 
-### Hiddify
+- [Hiddify — загрузки и исходный код](https://github.com/hiddify/hiddify-app/releases)
 
-Мультиплатформенный клиент на базе sing-box с поддержкой VLESS, VMess, Reality, TUIC, Hysteria2, WireGuard, Trojan и других протоколов. Поддерживает Windows, macOS, Linux, Android и iOS.
-
-- [Скачать](https://github.com/hiddify/hiddify-app/releases)
-- [Репозиторий](https://github.com/hiddify/hiddify-app)
-
-### Clash Verge Rev
-
-Современный GUI-клиент для Windows, macOS и Linux с поддержкой Mihomo/Clash Meta.
-
-- [Скачать](https://github.com/clash-verge-rev/clash-verge-rev/releases)
-- [Репозиторий](https://github.com/clash-verge-rev/clash-verge-rev)
-
-## 🤖 Android
-
-### v2rayNG
-
-Android-клиент с поддержкой Xray и v2fly.
-
-- [Скачать](https://github.com/2dust/v2rayNG/releases)
-- [Репозиторий](https://github.com/2dust/v2rayNG)
-
-### NekoBox+
-
-Модификация NekoBox для Android на основе форка Starifly. Страница проекта и актуальные сборки публикуются в теме 4PDA.
-
-- [Страница проекта / скачать](https://4pda.to/forum/index.php?showtopic=1121122)
-- [Основа — NekoBox by Starifly](https://github.com/starifly/NekoBoxForAndroid)
-
-### Clash Meta for Android
-
-Android-клиент на базе Clash.Meta.
-
-- [Скачать](https://github.com/MetaCubeX/ClashMetaForAndroid/releases)
-- [Репозиторий](https://github.com/MetaCubeX/ClashMetaForAndroid)
-
-### Hiddify
-
-Поддерживает Android и импорт подписок.
-
-- [Скачать](https://github.com/hiddify/hiddify-app/releases)
-- [Репозиторий](https://github.com/hiddify/hiddify-app)
-
-## 🍎 iOS
-
-### Hiddify
-
-Мультиплатформенный клиент с поддержкой iOS и удалённых профилей/подписок.
-
-- [GitHub Releases](https://github.com/hiddify/hiddify-app/releases)
-- [Репозиторий](https://github.com/hiddify/hiddify-app)
-
-## 🧠 Ядра
-
-- [Mihomo](https://github.com/MetaCubeX/mihomo) — современное ядро для Clash Meta-совместимых конфигураций.
-- [sing-box](https://github.com/SagerNet/sing-box) — универсальная proxy-платформа, используемая рядом современных клиентов.
-
-## 📋 Быстрый выбор
-
-| Платформа | Клиенты |
-|---|---|
-| 🪟 Windows | [v2rayN](https://github.com/2dust/v2rayN), [Hiddify](https://github.com/hiddify/hiddify-app), [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev) |
-| 🍎 macOS | [v2rayN](https://github.com/2dust/v2rayN), [Hiddify](https://github.com/hiddify/hiddify-app), [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev) |
-| 🐧 Linux | [v2rayN](https://github.com/2dust/v2rayN), [Hiddify](https://github.com/hiddify/hiddify-app), [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev) |
-| 🤖 Android | [v2rayNG](https://github.com/2dust/v2rayNG), [NekoBox+](https://4pda.to/forum/index.php?showtopic=1121122), [Clash Meta](https://github.com/MetaCubeX/ClashMetaForAndroid), [Hiddify](https://github.com/hiddify/hiddify-app) |
-| 🍎 iOS | [Hiddify](https://github.com/hiddify/hiddify-app) |
+> Не скачивайте приложения из случайных APK/EXE-каталогов и сторонних сайтов.
 
 ## ⚠️ Важно
 
-- Конфигурации собираются из сторонних источников.
-- Работоспособность отдельных конфигураций не гарантируется.
+- Конфигурации собираются из сторонних открытых источников.
+- Мы не являемся владельцами всех размещённых конфигураций и не гарантируем работоспособность каждого узла.
 - Конфигурации могут перестать работать без предупреждения.
-- Разные клиенты поддерживают разные протоколы и параметры.
-- Если конкретный конфиг не подключается, попробуйте другой клиент или другой узел.
-- Не скачивайте клиенты из непроверенных источников.
+- Разные клиенты могут поддерживать разные протоколы и параметры.
+- Если конфигурация не подключается, попробуйте другой узел или совместимый клиент.
 
-## 👥 Авторы и контакты
+## 👥 Проект и контакты
 
-**Оператор подписки / Telegram-канала:**  
-[@rudy_bd](https://t.me/rudy_bd)
-
-**Администратор канала / оператор подписки:**  
-[@cheesyx](https://t.me/cheesyx)
-
-**Telegram-канал проекта:**  
-[@parser_url](https://t.me/parser_url)
+**Проект:** LIKVID VPN  
+**Telegram-канал:** [@LIKVID_VPN](https://t.me/LIKVID_VPN)  
+**GitHub-репозиторий:** [cheesyx-rudy/LIKVID-VPN](https://github.com/cheesyx-rudy/LIKVID-VPN)
 
 ## 📄 Лицензия
 
@@ -197,6 +108,6 @@ Android-клиент на базе Clash.Meta.
 
 ### ⭐ Если проект оказался полезен — поставьте звезду репозиторию
 
-[GitHub](https://github.com/cheesyx-rudy/cheesyx-rudy) · [Parser URL](https://t.me/parser_url)
+[GitHub](https://github.com/cheesyx-rudy/LIKVID-VPN) · [Telegram](https://t.me/LIKVID_VPN)
 
 </div>
