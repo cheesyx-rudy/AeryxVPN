@@ -24,7 +24,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
 
     steps:
       - name: Checkout repository
@@ -37,20 +37,52 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install Python dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check --upgrade pip
+          python -m pip install --disable-pip-version-check -r requirements.txt
+          python -c "import requests, loguru, pydantic_settings, yaml; print('Python dependencies: OK')"
+
+      - name: Test Xray config generation and pipeline
+        run: python -m unittest discover -s tests -v
+
+      - name: Install latest stable Xray-core
+        if: ${{ github.event_name == 'schedule' || inputs.mode == 'fresh' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          release_json="$(curl -fsSL --retry 3 https://api.github.com/repos/XTLS/Xray-core/releases/latest)"
+          asset_url="$(python -c 'import json,sys; d=json.load(sys.stdin); a=[x["browser_download_url"] for x in d.get("assets",[]) if x.get("name")=="Xray-linux-64.zip"]; print(a[0] if a else "")' <<< "$release_json")"
+          version="$(python -c 'import json,sys; print(json.load(sys.stdin).get("tag_name", "unknown"))' <<< "$release_json")"
+          if [ -z "$asset_url" ]; then echo "Could not find Xray-linux-64.zip in latest stable release" >&2; exit 1; fi
+          echo "Installing Xray-core $version"
+          curl -fsSL --retry 3 "$asset_url" -o /tmp/xray.zip
+          mkdir -p /tmp/xray-dist
+          unzip -oq /tmp/xray.zip -d /tmp/xray-dist
+          test -f /tmp/xray-dist/xray
+          chmod +x /tmp/xray-dist/xray
+          echo "XRAY_BINARY=/tmp/xray-dist/xray" >> "$GITHUB_ENV"
+          /tmp/xray-dist/xray version
+
       - name: Build proxy URL list
         working-directory: usual-sub/legacy
         env:
           UPDATE_MODE: ${{ github.event_name == 'schedule' && 'fresh' || inputs.mode }}
         run: |
           set -euo pipefail
-          python proxy_parser.py --mode "$UPDATE_MODE"
+          if [ "$UPDATE_MODE" = "fresh" ]; then
+            python pipeline.py --config ../../configs/strict.yaml --xray-binary "$XRAY_BINARY"
+          else
+            python proxy_parser.py --mode "$UPDATE_MODE"
+          fi
 
       - name: Commit generated files
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add usual-sub/legacy/proxies.txt usual-sub/legacy/parsed_proxies.txt usual-sub/legacy/routing/LIKVID-RU-WHITELIST.JSON usual-sub/legacy/routing/LIKVID-RU-WHITELIST.DEEPLINK
+          git add usual-sub/legacy/proxies.txt usual-sub/legacy/parsed_proxies.txt usual-sub/legacy/rejected_proxies.txt usual-sub/legacy/validation_report.json usual-sub/legacy/routing/LIKVID-RU-WHITELIST.JSON usual-sub/legacy/routing/LIKVID-RU-WHITELIST.DEEPLINK
           if git diff --cached --quiet; then
             echo "No generated changes"
             exit 0
