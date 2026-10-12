@@ -1,94 +1,114 @@
 {
   "pipeline": "likvid-strict-subscription",
-  "started_at": "2026-10-11T17:50:06.304028+00:00",
+  "started_at": "2026-10-12T05:05:19.271304+00:00",
   "stages": [
     {
       "name": "collect",
       "input": 0,
-      "output": 858,
-      "elapsed_seconds": 7.86
+      "output": 1109,
+      "elapsed_seconds": 2.45
     },
     {
       "name": "filter_unsupported",
-      "input": 858,
-      "output": 852,
-      "elapsed_seconds": 0.01
+      "input": 1109,
+      "output": 1103,
+      "elapsed_seconds": 0.02
     },
     {
       "name": "normalize",
-      "input": 852,
-      "output": 852,
-      "elapsed_seconds": 0.0
+      "input": 1103,
+      "output": 1103,
+      "elapsed_seconds": 0.03
     },
     {
       "name": "deduplicate",
-      "input": 852,
-      "output": 852,
+      "input": 1103,
+      "output": 1103,
       "elapsed_seconds": 0.0
     },
     {
       "name": "cluster_analysis",
-      "input": 852,
-      "output": 852,
-      "elapsed_seconds": 0.01
+      "input": 1103,
+      "output": 1103,
+      "elapsed_seconds": 0.0
     },
     {
       "name": "xray_probe",
-      "input": 852,
-      "output": 595,
-      "elapsed_seconds": 333.9
+      "input": 1103,
+      "output": 836,
+      "elapsed_seconds": 323.92
     },
     {
       "name": "stability_check",
-      "input": 595,
-      "output": 595,
+      "input": 836,
+      "output": 836,
       "elapsed_seconds": 0.0
     }
   ],
   "clusters": [
     {
       "key": "vless|185.229.9.234|443|tcp|reality",
+      "count": 7
+    },
+    {
+      "key": "vless|185.229.9.175|443|tcp|reality",
+      "count": 4
+    },
+    {
+      "key": "vless|185.229.9.79|443|tcp|reality",
+      "count": 4
+    },
+    {
+      "key": "vless|188.225.77.178|443|grpc|reality",
+      "count": 4
+    },
+    {
+      "key": "vless|185.141.227.180|2053|xhttp|tls",
+      "count": 3
+    },
+    {
+      "key": "vless|151.236.114.253|443|tcp|reality",
+      "count": 3
+    },
+    {
+      "key": "vless|92.53.74.182|443|grpc|reality",
       "count": 3
     },
     {
       "key": "vless|87.242.95.77|7444|tcp|reality",
-      "count": 4
+      "count": 3
+    },
+    {
+      "key": "vless|188.225.76.193|443|tcp|reality",
+      "count": 3
+    },
+    {
+      "key": "vless|46.254.19.174|443|tcp|reality",
+      "count": 3
+    },
+    {
+      "key": "vless|196.240.125.5|8443|tcp|tls",
+      "count": 3
+    },
+    {
+      "key": "vless|196.240.125.251|8443|tcp|tls",
+      "count": 3
     },
     {
       "key": "hysteria2|109.235.49.234|443|tcp|none",
       "count": 3
     },
     {
-      "key": "vless|199.232.78.159|443|ws|tls",
+      "key": "vless|178.215.238.170|20268|tcp|reality",
       "count": 4
     },
     {
-      "key": "vless|177.3.218.191|20324|tcp|reality",
-      "count": 4
-    },
-    {
-      "key": "vless|177.3.216.217|20268|tcp|reality",
-      "count": 4
-    },
-    {
-      "key": "hysteria2|177.3.218.191|20326|tcp|none",
-      "count": 5
-    },
-    {
-      "key": "hysteria2|177.3.216.217|20270|tcp|none",
+      "key": "hysteria2|178.215.238.170|20270|tcp|none",
       "count": 5
     },
     {
       "key": "vless|89.169.53.176|4443|tcp|reality",
       "count": 4
-    },
-    {
-      "key": "vless|2.27.244.236|21382|tcp|reality",
-      "count": 4
-    },
-    {
-      "key": "hysteria2|2.27.244.236|21384|tcp|none",
-      "count": 5
     },
     {
       "key": "vless|107.181.151.39|443|tcp|reality",
@@ -99,32 +119,56 @@
       "count": 9
     },
     {
-      "key": "vless|13.143.174.151|21221|tcp|reality",
+      "key": "vless|31.77.151.160|20324|tcp|reality",
       "count": 4
     },
     {
-      "key": "hysteria2|13.143.174.151|21223|tcp|none",
+      "key": "hysteria2|31.77.151.160|20326|tcp|none",
       "count": 5
     },
     {
-      "key": "vless|157.228.69.91|27311|tcp|reality",
+      "key": "vless|45.81.33.194|443|tcp|reality",
+      "count": 4
+    },
+    {
+      "key": "vless|116.204.164.27|7443|ws|tls",
+      "count": 5
+    },
+    {
+      "key": "vless|116.204.164.30|7443|ws|tls",
+      "count": 4
+    },
+    {
+      "key": "vless|116.204.164.17|7443|ws|tls",
       "count": 3
     },
     {
-      "key": "hysteria2|157.228.69.91|27313|tcp|none",
+      "key": "vless|177.3.209.143|21221|tcp|reality",
+      "count": 4
+    },
+    {
+      "key": "hysteria2|177.3.209.143|21223|tcp|none",
       "count": 5
+    },
+    {
+      "key": "hysteria2|138.124.62.230|27313|tcp|none",
+      "count": 5
+    },
+    {
+      "key": "vless|138.124.62.230|27311|tcp|reality",
+      "count": 3
     },
     {
       "key": "hysteria2|157.22.240.206|28152|tcp|none",
       "count": 4
     }
   ],
-  "accepted": 595,
-  "rejected": 263,
-  "finished_at": "2026-10-11T17:55:48.387148+00:00",
+  "accepted": 836,
+  "rejected": 273,
+  "finished_at": "2026-10-12T05:10:46.140590+00:00",
   "rejection_reasons": {
     "unsupported ML-KEM config": 6,
-    "tunnel": 153,
-    "xray": 104
+    "tunnel": 172,
+    "xray": 95
   }
 }
