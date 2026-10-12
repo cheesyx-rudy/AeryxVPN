@@ -1,69 +1,53 @@
 {
   "pipeline": "likvid-strict-subscription",
-  "started_at": "2026-10-12T05:05:19.271304+00:00",
+  "started_at": "2026-10-12T09:38:49.020380+00:00",
   "stages": [
     {
       "name": "collect",
       "input": 0,
-      "output": 1109,
-      "elapsed_seconds": 2.45
+      "output": 801,
+      "elapsed_seconds": 15.09
     },
     {
       "name": "filter_unsupported",
-      "input": 1109,
-      "output": 1103,
-      "elapsed_seconds": 0.02
+      "input": 801,
+      "output": 795,
+      "elapsed_seconds": 0.01
     },
     {
       "name": "normalize",
-      "input": 1103,
-      "output": 1103,
-      "elapsed_seconds": 0.03
+      "input": 795,
+      "output": 795,
+      "elapsed_seconds": 0.02
     },
     {
       "name": "deduplicate",
-      "input": 1103,
-      "output": 1103,
+      "input": 795,
+      "output": 795,
       "elapsed_seconds": 0.0
     },
     {
       "name": "cluster_analysis",
-      "input": 1103,
-      "output": 1103,
+      "input": 795,
+      "output": 795,
       "elapsed_seconds": 0.0
     },
     {
       "name": "xray_probe",
-      "input": 1103,
-      "output": 836,
-      "elapsed_seconds": 323.92
+      "input": 795,
+      "output": 573,
+      "elapsed_seconds": 291.73
     },
     {
       "name": "stability_check",
-      "input": 836,
-      "output": 836,
+      "input": 573,
+      "output": 573,
       "elapsed_seconds": 0.0
     }
   ],
   "clusters": [
     {
-      "key": "vless|185.229.9.234|443|tcp|reality",
-      "count": 7
-    },
-    {
-      "key": "vless|185.229.9.175|443|tcp|reality",
-      "count": 4
-    },
-    {
-      "key": "vless|185.229.9.79|443|tcp|reality",
-      "count": 4
-    },
-    {
-      "key": "vless|188.225.77.178|443|grpc|reality",
-      "count": 4
-    },
-    {
-      "key": "vless|185.141.227.180|2053|xhttp|tls",
+      "key": "vless|78.159.246.85|2053|xhttp|tls",
       "count": 3
     },
     {
@@ -71,52 +55,32 @@
       "count": 3
     },
     {
-      "key": "vless|92.53.74.182|443|grpc|reality",
-      "count": 3
-    },
-    {
-      "key": "vless|87.242.95.77|7444|tcp|reality",
-      "count": 3
-    },
-    {
-      "key": "vless|188.225.76.193|443|tcp|reality",
-      "count": 3
-    },
-    {
-      "key": "vless|46.254.19.174|443|tcp|reality",
-      "count": 3
-    },
-    {
-      "key": "vless|196.240.125.5|8443|tcp|tls",
-      "count": 3
-    },
-    {
-      "key": "vless|196.240.125.251|8443|tcp|tls",
-      "count": 3
-    },
-    {
       "key": "hysteria2|109.235.49.234|443|tcp|none",
       "count": 3
     },
     {
-      "key": "vless|178.215.238.170|20268|tcp|reality",
-      "count": 4
+      "key": "vless|212.80.7.182|20268|tcp|reality",
+      "count": 3
     },
     {
-      "key": "hysteria2|178.215.238.170|20270|tcp|none",
-      "count": 5
+      "key": "hysteria2|212.80.7.182|20270|tcp|none",
+      "count": 3
     },
     {
       "key": "vless|89.169.53.176|4443|tcp|reality",
       "count": 4
     },
     {
-      "key": "vless|107.181.151.39|443|tcp|reality",
-      "count": 10
+      "key": "vless|31.77.126.2|443|ws|tls",
+      "count": 4
     },
     {
       "key": "vless|107.181.151.241|443|tcp|reality",
       "count": 9
+    },
+    {
+      "key": "vless|107.181.151.39|443|tcp|reality",
+      "count": 10
     },
     {
       "key": "vless|31.77.151.160|20324|tcp|reality",
@@ -129,18 +93,6 @@
     {
       "key": "vless|45.81.33.194|443|tcp|reality",
       "count": 4
-    },
-    {
-      "key": "vless|116.204.164.27|7443|ws|tls",
-      "count": 5
-    },
-    {
-      "key": "vless|116.204.164.30|7443|ws|tls",
-      "count": 4
-    },
-    {
-      "key": "vless|116.204.164.17|7443|ws|tls",
-      "count": 3
     },
     {
       "key": "vless|177.3.209.143|21221|tcp|reality",
@@ -156,19 +108,15 @@
     },
     {
       "key": "vless|138.124.62.230|27311|tcp|reality",
-      "count": 3
-    },
-    {
-      "key": "hysteria2|157.22.240.206|28152|tcp|none",
-      "count": 4
+      "count": 5
     }
   ],
-  "accepted": 836,
-  "rejected": 273,
-  "finished_at": "2026-10-12T05:10:46.140590+00:00",
+  "accepted": 573,
+  "rejected": 228,
+  "finished_at": "2026-10-12T09:43:56.184783+00:00",
   "rejection_reasons": {
     "unsupported ML-KEM config": 6,
-    "tunnel": 172,
-    "xray": 95
+    "tunnel": 150,
+    "xray": 72
   }
 }
