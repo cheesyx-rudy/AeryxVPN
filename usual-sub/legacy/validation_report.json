@@ -1,53 +1,53 @@
 {
   "pipeline": "likvid-strict-subscription",
-  "started_at": "2026-10-13T21:39:26.578078+00:00",
+  "started_at": "2026-10-13T21:53:02.727352+00:00",
   "stages": [
     {
       "name": "collect",
       "input": 0,
-      "output": 610,
-      "elapsed_seconds": 2.28
+      "output": 658,
+      "elapsed_seconds": 2.56
     },
     {
       "name": "filter_unsupported",
-      "input": 610,
-      "output": 608,
+      "input": 658,
+      "output": 656,
       "elapsed_seconds": 0.01
     },
     {
       "name": "normalize",
-      "input": 608,
-      "output": 608,
-      "elapsed_seconds": 0.01
+      "input": 656,
+      "output": 656,
+      "elapsed_seconds": 0.02
     },
     {
       "name": "deduplicate",
-      "input": 608,
-      "output": 552,
+      "input": 656,
+      "output": 599,
       "elapsed_seconds": 0.0
     },
     {
       "name": "cluster_analysis",
-      "input": 552,
-      "output": 552,
+      "input": 599,
+      "output": 599,
       "elapsed_seconds": 0.0
     },
     {
       "name": "blocklist_filter",
-      "input": 552,
-      "output": 416,
-      "elapsed_seconds": 23.84
+      "input": 599,
+      "output": 440,
+      "elapsed_seconds": 23.3
     },
     {
       "name": "xray_probe",
-      "input": 416,
-      "output": 245,
-      "elapsed_seconds": 195.28
+      "input": 440,
+      "output": 262,
+      "elapsed_seconds": 196.58
     },
     {
       "name": "stability_check",
-      "input": 245,
-      "output": 245,
+      "input": 262,
+      "output": 262,
       "elapsed_seconds": 0.0
     }
   ],
@@ -106,7 +106,7 @@
     },
     {
       "key": "vless|79.174.92.222|443|grpc|reality",
-      "count": 6
+      "count": 7
     },
     {
       "key": "vless|finkawwwbroy5.qcloud.surf|20324|tcp|reality",
@@ -138,7 +138,7 @@
     },
     {
       "key": "vless|90.156.218.163|443|raw|reality",
-      "count": 7
+      "count": 8
     },
     {
       "key": "vless|31.59.216.141|443|tcp|reality",
@@ -187,22 +187,26 @@
     {
       "key": "vless|es3.h1cloud.net|25136|tcp|reality",
       "count": 3
+    },
+    {
+      "key": "vless|151.101.173.33|443|xhttp|tls",
+      "count": 12
     }
   ],
   "blocklist": {
     "status": "downloaded",
     "network_count": 57174,
-    "filtered_configs": 136,
+    "filtered_configs": 159,
     "url_configured": true
   },
-  "accepted": 245,
-  "rejected": 365,
-  "finished_at": "2026-10-13T21:43:16.296185+00:00",
+  "accepted": 262,
+  "rejected": 396,
+  "finished_at": "2026-10-13T21:56:51.573268+00:00",
   "rejection_reasons": {
     "unsupported ML-KEM config": 2,
-    "duplicate URI": 56,
-    "blocked_ip": 136,
+    "duplicate URI": 57,
+    "blocked_ip": 159,
     "tunnel": 149,
-    "xray": 22
+    "xray": 29
   }
 }
