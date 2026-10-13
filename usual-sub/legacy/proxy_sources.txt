@@ -1,3 +1,5 @@
 https://hub.mos.ru/akres/vpn/-/raw/main/bwl
-https://hub.mos.ru/akres/vpn/-/raw/main/all
-https://raw.githubusercontent.com/mukhtarsss/Vpn-sub/main/m7khtarsss67
+https://raw.githubusercontent.com/VansFenix/vpnparser/main/white.txt
+https://bobrrvpn.neocities.org/whitelist.txt
+https://raw.githubusercontent.com/VansFenix/vpnparser/refs/heads/main/all.txt
+https://bobrrvpn.neocities.org/blacklist.txt
