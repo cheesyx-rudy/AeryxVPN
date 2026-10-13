@@ -12,7 +12,7 @@ on:
           - fresh
           - cleanup
   schedule:
-    - cron: "30 * * * *"
+    - cron: "13,43 * * * *"
 
 permissions:
   contents: write
@@ -69,6 +69,7 @@ jobs:
         working-directory: usual-sub/legacy
         env:
           UPDATE_MODE: ${{ github.event_name == 'schedule' && 'fresh' || inputs.mode }}
+          LIKVID_BLOCKLIST_URL: ${{ vars.LIKVID_BLOCKLIST_URL }}
         run: |
           set -euo pipefail
           if [ "$UPDATE_MODE" = "fresh" ]; then
@@ -82,7 +83,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add usual-sub/legacy/proxies.txt usual-sub/legacy/parsed_proxies.txt usual-sub/legacy/rejected_proxies.txt usual-sub/legacy/validation_report.json usual-sub/legacy/routing/LIKVID-RU-WHITELIST.JSON usual-sub/legacy/routing/LIKVID-RU-WHITELIST.DEEPLINK
+          git add usual-sub/legacy/proxies.txt usual-sub/legacy/parsed_proxies.txt usual-sub/legacy/rejected_proxies.txt usual-sub/legacy/validation_report.json usual-sub/legacy/routing/LIKVID-RU-WHITELIST.JSON usual-sub/legacy/routing/LIKVID-RU-WHITELIST.DEEPLINK usual-sub/legacy/blocklist_cache.txt
           if git diff --cached --quiet; then
             echo "No generated changes"
             exit 0
