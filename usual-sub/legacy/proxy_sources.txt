@@ -3,3 +3,4 @@ https://raw.githubusercontent.com/VansFenix/vpnparser/main/white.txt
 https://bobrrvpn.neocities.org/whitelist.txt
 https://raw.githubusercontent.com/VansFenix/vpnparser/refs/heads/main/all.txt
 https://bobrrvpn.neocities.org/blacklist.txt
+https://raw.githubusercontent.com/gooseteam-hackers/freevpn-cracks/refs/heads/main/subscription_default.txt
