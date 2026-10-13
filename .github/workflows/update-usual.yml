@@ -98,6 +98,7 @@ jobs:
         shell: bash
         env:
           UPDATE_MODE: ${{ github.event_name == 'schedule' && 'fresh' || inputs.mode }}
+          PUSH_TOKEN: ${{ secrets.LIKVID_GITHUB_TOKEN || github.token }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
@@ -112,11 +113,14 @@ jobs:
           else
             git commit -m "Update proxy URLs"
           fi
+          # Use the selected token explicitly for Git operations; do not rely on
+          # credentials implicitly configured by actions/checkout.
+          AUTH_HEADER="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$PUSH_TOKEN" | base64 -w0)"
           # Retry if a human or another workflow updated main during the build.
           for attempt in 1 2 3; do
-            git fetch origin main
+            git -c http.https://github.com/.extraheader="$AUTH_HEADER" fetch origin main
             if git rebase origin/main; then
-              if git push origin HEAD:main; then
+              if git -c http.https://github.com/.extraheader="$AUTH_HEADER" push origin HEAD:main; then
                 exit 0
               fi
             else
