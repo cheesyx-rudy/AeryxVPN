@@ -1,12 +1,12 @@
 {
   "pipeline": "likvid-strict-subscription",
-  "started_at": "2026-10-13T21:33:10.953335+00:00",
+  "started_at": "2026-10-13T21:39:26.578078+00:00",
   "stages": [
     {
       "name": "collect",
       "input": 0,
       "output": 610,
-      "elapsed_seconds": 2.22
+      "elapsed_seconds": 2.28
     },
     {
       "name": "filter_unsupported",
@@ -18,7 +18,7 @@
       "name": "normalize",
       "input": 608,
       "output": 608,
-      "elapsed_seconds": 0.02
+      "elapsed_seconds": 0.01
     },
     {
       "name": "deduplicate",
@@ -36,18 +36,18 @@
       "name": "blocklist_filter",
       "input": 552,
       "output": 416,
-      "elapsed_seconds": 18.72
+      "elapsed_seconds": 23.84
     },
     {
       "name": "xray_probe",
       "input": 416,
-      "output": 250,
-      "elapsed_seconds": 194.6
+      "output": 245,
+      "elapsed_seconds": 195.28
     },
     {
       "name": "stability_check",
-      "input": 250,
-      "output": 250,
+      "input": 245,
+      "output": 245,
       "elapsed_seconds": 0.0
     }
   ],
@@ -195,14 +195,14 @@
     "filtered_configs": 136,
     "url_configured": true
   },
-  "accepted": 250,
-  "rejected": 360,
-  "finished_at": "2026-10-13T21:36:55.075143+00:00",
+  "accepted": 245,
+  "rejected": 365,
+  "finished_at": "2026-10-13T21:43:16.296185+00:00",
   "rejection_reasons": {
     "unsupported ML-KEM config": 2,
     "duplicate URI": 56,
     "blocked_ip": 136,
-    "tunnel": 144,
+    "tunnel": 149,
     "xray": 22
   }
 }
