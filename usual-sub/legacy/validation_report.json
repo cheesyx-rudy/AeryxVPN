@@ -1,76 +1,72 @@
 {
   "pipeline": "likvid-strict-subscription",
-  "started_at": "2026-10-13T21:53:02.727352+00:00",
+  "started_at": "2026-10-13T23:52:55.878038+00:00",
   "stages": [
     {
       "name": "collect",
       "input": 0,
-      "output": 658,
-      "elapsed_seconds": 2.56
+      "output": 703,
+      "elapsed_seconds": 2.15
     },
     {
       "name": "filter_unsupported",
-      "input": 658,
-      "output": 656,
+      "input": 703,
+      "output": 703,
       "elapsed_seconds": 0.01
     },
     {
       "name": "normalize",
-      "input": 656,
-      "output": 656,
-      "elapsed_seconds": 0.02
+      "input": 703,
+      "output": 703,
+      "elapsed_seconds": 0.01
     },
     {
       "name": "deduplicate",
-      "input": 656,
-      "output": 599,
+      "input": 703,
+      "output": 646,
       "elapsed_seconds": 0.0
     },
     {
       "name": "cluster_analysis",
-      "input": 599,
-      "output": 599,
+      "input": 646,
+      "output": 646,
       "elapsed_seconds": 0.0
     },
     {
       "name": "blocklist_filter",
-      "input": 599,
-      "output": 440,
-      "elapsed_seconds": 23.3
+      "input": 646,
+      "output": 471,
+      "elapsed_seconds": 30.8
     },
     {
       "name": "xray_probe",
-      "input": 440,
-      "output": 262,
-      "elapsed_seconds": 196.58
+      "input": 471,
+      "output": 303,
+      "elapsed_seconds": 185.91
     },
     {
       "name": "stability_check",
-      "input": 262,
-      "output": 262,
+      "input": 303,
+      "output": 303,
       "elapsed_seconds": 0.0
     }
   ],
   "clusters": [
     {
+      "key": "vless|78.159.246.179|2053|xhttp|tls",
+      "count": 4
+    },
+    {
       "key": "vless|185.141.227.180|2053|xhttp|tls",
-      "count": 34
+      "count": 35
+    },
+    {
+      "key": "vless|78.159.246.85|2053|xhttp|tls",
+      "count": 6
     },
     {
       "key": "vless|78.159.250.84|2053|xhttp|tls",
       "count": 9
-    },
-    {
-      "key": "vless|78.159.246.179|2053|xhttp|tls",
-      "count": 5
-    },
-    {
-      "key": "vless|78.159.246.85|2053|xhttp|tls",
-      "count": 8
-    },
-    {
-      "key": "vless|78.159.246.179|2053|tcp|none",
-      "count": 3
     },
     {
       "key": "vless|185.229.9.175|443|tcp|reality",
@@ -78,35 +74,39 @@
     },
     {
       "key": "vless|185.229.9.234|443|tcp|reality",
-      "count": 3
+      "count": 4
     },
     {
       "key": "vless|5.35.101.42|443|tcp|reality",
       "count": 6
     },
     {
+      "key": "vless|139.100.212.50|443|xhttp|tls",
+      "count": 3
+    },
+    {
       "key": "vless|78.159.250.84|8443|xhttp|tls",
-      "count": 4
-    },
-    {
-      "key": "vless|87.242.127.113|4510|tcp|reality",
       "count": 3
     },
     {
-      "key": "vless|147.45.60.160|8444|grpc|reality",
-      "count": 3
-    },
-    {
-      "key": "vless|90.156.218.163|443|tcp|reality",
-      "count": 20
+      "key": "vless|79.174.92.222|443|grpc|reality",
+      "count": 8
     },
     {
       "key": "vless|193.233.220.203|8443|xhttp|reality",
       "count": 3
     },
     {
-      "key": "vless|79.174.92.222|443|grpc|reality",
-      "count": 7
+      "key": "vless|es3.h1cloud.net|25136|tcp|reality",
+      "count": 4
+    },
+    {
+      "key": "vless|90.156.218.163|443|tcp|reality",
+      "count": 20
+    },
+    {
+      "key": "vless|147.45.60.160|8444|grpc|reality",
+      "count": 3
     },
     {
       "key": "vless|finkawwwbroy5.qcloud.surf|20324|tcp|reality",
@@ -145,19 +145,15 @@
       "count": 3
     },
     {
-      "key": "vless|88.119.176.134|443|tcp|reality",
-      "count": 3
-    },
-    {
       "key": "vless|31.58.95.10|443|grpc|reality",
       "count": 3
     },
     {
-      "key": "vless|13.143.186.27|443|grpc|reality",
+      "key": "vless|37.221.92.145|443|tcp|reality",
       "count": 4
     },
     {
-      "key": "vless|hs.riverveil.com|27631|tcp|reality",
+      "key": "vless|13.143.186.27|443|grpc|reality",
       "count": 4
     },
     {
@@ -165,15 +161,15 @@
       "count": 3
     },
     {
+      "key": "vless|hs.riverveil.com|27631|tcp|reality",
+      "count": 4
+    },
+    {
       "key": "vless|46.250.250.149|2053|tcp|reality",
       "count": 3
     },
     {
       "key": "vless|150.241.82.85|443|grpc|reality",
-      "count": 4
-    },
-    {
-      "key": "vless|37.221.92.145|443|tcp|reality",
       "count": 4
     },
     {
@@ -185,28 +181,23 @@
       "count": 3
     },
     {
-      "key": "vless|es3.h1cloud.net|25136|tcp|reality",
-      "count": 3
-    },
-    {
       "key": "vless|151.101.173.33|443|xhttp|tls",
       "count": 12
     }
   ],
   "blocklist": {
     "status": "downloaded",
-    "network_count": 57174,
-    "filtered_configs": 159,
+    "network_count": 57202,
+    "filtered_configs": 175,
     "url_configured": true
   },
-  "accepted": 262,
-  "rejected": 396,
-  "finished_at": "2026-10-13T21:56:51.573268+00:00",
+  "accepted": 303,
+  "rejected": 400,
+  "finished_at": "2026-10-13T23:56:40.752258+00:00",
   "rejection_reasons": {
-    "unsupported ML-KEM config": 2,
     "duplicate URI": 57,
-    "blocked_ip": 159,
-    "tunnel": 149,
-    "xray": 29
+    "blocked_ip": 175,
+    "tunnel": 134,
+    "xray": 34
   }
 }
