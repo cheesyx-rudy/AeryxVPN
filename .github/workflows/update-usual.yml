@@ -31,13 +31,11 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
-        with:
-          ref: main
-          fetch-depth: 0
-          # Create this repository secret with a fine-grained PAT that has Contents: Read and write.
-          # The PAT is used for checkout/push so commits can trigger other workflows if needed.
-          token: ${{ secrets.LIKVID_GITHUB_TOKEN || github.token }}
+  uses: actions/checkout@v5
+  with:
+    ref: main
+    fetch-depth: 0
+    token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v6
