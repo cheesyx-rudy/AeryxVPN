@@ -80,15 +80,20 @@ jobs:
       - name: Build proxy URL list
         working-directory: usual-sub/legacy
         env:
+          PYTHONUNBUFFERED: "1"
           UPDATE_MODE: ${{ github.event_name == 'schedule' && 'fresh' || inputs.mode }}
           LIKVID_BLOCKLIST_URL: ${{ vars.LIKVID_BLOCKLIST_URL }}
         shell: bash
         run: |
           set -euo pipefail
+          echo "[$(date -u '+%H:%M:%S UTC')] Starting pipeline; mode=$UPDATE_MODE"
+
           if [ "$UPDATE_MODE" = "fresh" ]; then
-            python pipeline.py --config ../../configs/strict.yaml --xray-binary "$XRAY_BINARY"
+            python -u -X faulthandler pipeline.py \
+              --config ../../configs/strict.yaml \
+              --xray-binary "$XRAY_BINARY"
           elif [ "$UPDATE_MODE" = "cleanup" ]; then
-            python proxy_parser.py --mode cleanup
+            python -u -X faulthandler proxy_parser.py --mode cleanup
           else
             echo "Unsupported update mode: $UPDATE_MODE" >&2
             exit 2
