@@ -23,6 +23,11 @@ stages:
     enabled: true
     group_by: scheme_host_port_transport_security
     warn_after: 3
+  - name: blocklist_filter
+    enabled: true
+    url_env: LIKVID_BLOCKLIST_URL
+    cache_path: usual-sub/legacy/blocklist_cache.txt
+    timeout_seconds: 20
   - name: xray_probe
     enabled: true
     core: xray

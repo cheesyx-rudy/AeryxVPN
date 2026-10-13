@@ -13,6 +13,7 @@ from domain import ProxyURI, ResultTest
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "usual-sub" / "legacy"))
 import proxy_parser as legacy
+import blocklist_filter
 
 
 def load_config(path):
@@ -21,7 +22,7 @@ def load_config(path):
     if not isinstance(cfg, dict) or not isinstance(cfg.get("stages"), list):
         raise ValueError("YAML must contain a root mapping and stages list")
     names = [s.get("name") for s in cfg["stages"] if s.get("enabled", True)]
-    allowed = {"collect", "filter_unsupported", "normalize", "deduplicate", "cluster_analysis", "xray_probe", "stability_check"}
+    allowed = {"collect", "filter_unsupported", "normalize", "deduplicate", "cluster_analysis", "blocklist_filter", "xray_probe", "stability_check"}
     unknown = set(names) - allowed
     if unknown:
         raise ValueError(f"Unknown stage(s): {', '.join(sorted(unknown))}")
@@ -168,6 +169,51 @@ def run(config_path, xray_binary):
                 if len(members)>=threshold:
                     report["clusters"].append({"key":key,"count":len(members)})
                     logger.info("{} similar configs share endpoint profile {}; testing independently", len(members), key)
+        elif name == "blocklist_filter":
+            url = str(st.get("url_env", "LIKVID_BLOCKLIST_URL"))
+            url = os.environ.get(url, "").strip()
+            cache_path = ROOT / str(st.get("cache_path", "usual-sub/legacy/blocklist_cache.txt"))
+            try:
+                networks, blocklist_status = blocklist_filter.load_networks(
+                    url, cache_path, int(st.get("timeout_seconds", 20))
+                )
+            except Exception as exc:
+                raise RuntimeError(f"Blocklist stage failed safely: {exc}") from exc
+            blocked = []
+            keep = []
+            network_index = blocklist_filter.build_network_index(networks)
+            if not networks:
+                logger.warning("Blocklist filtering skipped: no URL and no valid cache")
+            else:
+                for uri in records:
+                    host = uri.host
+                    if uri.scheme == "vmess":
+                        try:
+                            vmess = legacy._vmess_object(uri.raw)
+                            host = str(vmess.get("add") or vmess.get("address") or host or "")
+                        except Exception:
+                            pass
+                    matches = blocklist_filter.find_blocked_ips(host or "", network_index)
+                    if matches:
+                        rejected.append({
+                            "uri": uri.raw,
+                            "stage": name,
+                            "reason": "blocked_ip",
+                            "matched_ips": matches,
+                            "blocklist_status": blocklist_status,
+                        })
+                        blocked.append(uri)
+                    else:
+                        keep.append(uri)
+                records = keep
+            report.setdefault("blocklist", {}).update({
+                "status": blocklist_status,
+                "network_count": len(networks),
+                "filtered_configs": len(blocked),
+                "url_configured": bool(url),
+            })
+            logger.info("Blocklist filter: status={} networks={} rejected={} remaining={}",
+                        blocklist_status, len(networks), len(blocked), len(records))
         elif name == "xray_probe":
             if not xray_binary or not Path(xray_binary).exists(): raise RuntimeError("Xray binary missing; set XRAY_BINARY or --xray-binary")
             if st.get("core", "xray") != "xray" or st.get("mode", "proxy_get") != "proxy_get" or st.get("request_mode", "keepalive") != "keepalive":
