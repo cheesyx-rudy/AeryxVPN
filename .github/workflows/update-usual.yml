@@ -12,6 +12,7 @@ on:
           - fresh
           - cleanup
   schedule:
+    # GitHub cron uses UTC. Runs twice per hour; scheduled starts may still be delayed.
     - cron: "13,43 * * * *"
 
 permissions:
@@ -25,39 +26,50 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          fetch-depth: 1
+          ref: main
+          fetch-depth: 0
+          # Create this repository secret with a fine-grained PAT that has Contents: Read and write.
+          # The PAT is used for checkout/push so commits can trigger other workflows if needed.
+          token: ${{ secrets.LIKVID_GITHUB_TOKEN || github.token }}
 
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
 
       - name: Install Python dependencies
+        shell: bash
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check --upgrade pip
           python -m pip install --disable-pip-version-check -r requirements.txt
           python -c "import requests, loguru, pydantic_settings, yaml; print('Python dependencies: OK')"
 
-      - name: Test Xray config generation and pipeline
+      - name: Test pipeline and Xray config generation
         run: python -m unittest discover -s tests -v
 
       - name: Install latest stable Xray-core
         if: ${{ github.event_name == 'schedule' || inputs.mode == 'fresh' }}
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.LIKVID_GITHUB_TOKEN || github.token }}
         run: |
           set -euo pipefail
-          release_json="$(curl -fsSL --retry 3 https://api.github.com/repos/XTLS/Xray-core/releases/latest)"
+          release_json="$(curl --fail --silent --show-error --location --retry 3 --retry-all-errors             -H "Authorization: Bearer ${GH_TOKEN}"             -H "Accept: application/vnd.github+json"             -H "X-GitHub-Api-Version: 2022-11-28"             https://api.github.com/repos/XTLS/Xray-core/releases/latest)"
           asset_url="$(python -c 'import json,sys; d=json.load(sys.stdin); a=[x["browser_download_url"] for x in d.get("assets",[]) if x.get("name")=="Xray-linux-64.zip"]; print(a[0] if a else "")' <<< "$release_json")"
           version="$(python -c 'import json,sys; print(json.load(sys.stdin).get("tag_name", "unknown"))' <<< "$release_json")"
           if [ -z "$asset_url" ]; then echo "Could not find Xray-linux-64.zip in latest stable release" >&2; exit 1; fi
           echo "Installing Xray-core $version"
-          curl -fsSL --retry 3 "$asset_url" -o /tmp/xray.zip
+          curl --fail --silent --show-error --location --retry 3 --retry-all-errors "$asset_url" -o /tmp/xray.zip
           mkdir -p /tmp/xray-dist
           unzip -oq /tmp/xray.zip -d /tmp/xray-dist
           test -f /tmp/xray-dist/xray
@@ -70,28 +82,50 @@ jobs:
         env:
           UPDATE_MODE: ${{ github.event_name == 'schedule' && 'fresh' || inputs.mode }}
           LIKVID_BLOCKLIST_URL: ${{ vars.LIKVID_BLOCKLIST_URL }}
+        shell: bash
         run: |
           set -euo pipefail
           if [ "$UPDATE_MODE" = "fresh" ]; then
             python pipeline.py --config ../../configs/strict.yaml --xray-binary "$XRAY_BINARY"
+          elif [ "$UPDATE_MODE" = "cleanup" ]; then
+            python proxy_parser.py --mode cleanup
           else
-            python proxy_parser.py --mode "$UPDATE_MODE"
+            echo "Unsupported update mode: $UPDATE_MODE" >&2
+            exit 2
           fi
 
       - name: Commit generated files
+        shell: bash
+        env:
+          UPDATE_MODE: ${{ github.event_name == 'schedule' && 'fresh' || inputs.mode }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add usual-sub/legacy/proxies.txt usual-sub/legacy/parsed_proxies.txt usual-sub/legacy/rejected_proxies.txt usual-sub/legacy/validation_report.json usual-sub/legacy/routing/LIKVID-RU-WHITELIST.JSON usual-sub/legacy/routing/LIKVID-RU-WHITELIST.DEEPLINK usual-sub/legacy/blocklist_cache.txt
+          git add             usual-sub/legacy/proxies.txt             usual-sub/legacy/parsed_proxies.txt             usual-sub/legacy/rejected_proxies.txt             usual-sub/legacy/validation_report.json             usual-sub/legacy/routing/LIKVID-RU-WHITELIST.JSON             usual-sub/legacy/routing/LIKVID-RU-WHITELIST.DEEPLINK             usual-sub/legacy/blocklist_cache.txt
           if git diff --cached --quiet; then
             echo "No generated changes"
             exit 0
           fi
-          if [ "${{ github.event_name == 'schedule' && 'fresh' || inputs.mode }}" = "cleanup" ]; then
+          if [ "$UPDATE_MODE" = "cleanup" ]; then
             git commit -m "Remove failed proxy URLs"
           else
             git commit -m "Update proxy URLs"
           fi
-          git pull --rebase origin main
-          git push origin HEAD:main
+          # Retry if a human or another workflow updated main during the build.
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main; then
+              if git push origin HEAD:main; then
+                exit 0
+              fi
+            else
+              git rebase --abort || true
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Push attempt $attempt failed; retrying in a few seconds..."
+              sleep $((attempt * 3))
+            fi
+          done
+          echo "Could not push generated files after 3 attempts" >&2
+          exit 1
