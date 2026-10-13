@@ -35,9 +35,10 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-          # Create this repository secret with a fine-grained PAT that has Contents: Read and write.
-          # The PAT is used for checkout/push so commits can trigger other workflows if needed.
           token: ${{ secrets.LIKVID_GITHUB_TOKEN || github.token }}
+          # Git operations below provide their own Authorization header.
+          # Disable checkout's stored extraheader to prevent duplicate Authorization headers.
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v6
