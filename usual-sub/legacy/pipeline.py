@@ -285,7 +285,7 @@ def run(config_path, xray_binary):
         "#support-url: https://t.me/cheesyx",
         "#profile-web-page-url: https://t.me/LIKVID_VPN",
         "#profile-update-interval: 1",
-        f"#announce: вся важная информация в канале @LIKVID_VPN // авторы @rudy_bd @cheesyx // обновлено: {updated} | конфигов: {len(output)}",
+        f"#announce: LIKVID VPN · Новости: @LIKVID_VPN · Разработчики: @rudy_bd @cheesyx · обновлено: {updated} | конфигов: {len(output)}",
         legacy.build_happ_routing_link(),
         *output,
     ]
