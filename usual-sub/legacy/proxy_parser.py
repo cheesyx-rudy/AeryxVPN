@@ -738,8 +738,8 @@ def main():
         "#subscription-userinfo: upload=0; download=0; total=0; expire=2524608000\n"
         "#profile-title: LIKVID VPN\n"
         "#profile-update-interval: 1\n"
-        "#profile-web-page-url: t.me/likvid_vpn\n"
-        "#support-url: t.me/cheesyx\n"
+        "#profile-web-page-url: https://t.me/likvid_vpn\n"
+        "#support-url: https://t.me/cheesyx\n"
         f"#announce: вся важная информация в канале @LIKVID_VPN // авторы @rudy_bd @cheesyx // обновлено: {updated} | конфигов: {len(output)}"
     )
 
