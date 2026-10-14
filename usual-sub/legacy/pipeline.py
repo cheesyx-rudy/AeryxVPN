@@ -282,7 +282,7 @@ def run(config_path, xray_binary):
     updated=(datetime.now(timezone.utc)+timedelta(hours=3)).strftime("%d.%m.%Y %H:%M")
     header_lines = [
         "#profile-title: LIKVID VPN",
-        "support-url: https://t.me/cheesyx",
+        "#support-url: https://t.me/cheesyx",
         "#profile-web-page-url: https://t.me/LIKVID_VPN",
         "#profile-update-interval: 1",
         f"#announce: вся важная информация в канале @LIKVID_VPN // авторы @rudy_bd @cheesyx // обновлено: {updated} | конфигов: {len(output)}",
