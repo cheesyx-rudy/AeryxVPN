@@ -281,8 +281,9 @@ def run(config_path, xray_binary):
     output=[legacy.rename_uri(u,i) for i,u in enumerate(records,1)]
     updated=(datetime.now(timezone.utc)+timedelta(hours=3)).strftime("%d.%m.%Y %H:%M")
     header_lines = [
-        "#subscription-userinfo: upload=0; download=0; total=0; expire=2524608000",
         "#profile-title: LIKVID VPN",
+        "support-url: https://t.me/cheesyx",
+        "#profile-web-page-url: https://t.me/LIKVID_VPN",
         "#profile-update-interval: 1",
         f"#announce: вся важная информация в канале @LIKVID_VPN // авторы @rudy_bd @cheesyx // обновлено: {updated} | конфигов: {len(output)}",
         legacy.build_happ_routing_link(),
