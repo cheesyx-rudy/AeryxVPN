@@ -1,96 +1,88 @@
 {
   "pipeline": "likvid-strict-subscription",
-  "started_at": "2026-10-13T23:52:55.878038+00:00",
+  "started_at": "2026-10-14T04:47:52.331519+00:00",
   "stages": [
     {
       "name": "collect",
       "input": 0,
-      "output": 703,
-      "elapsed_seconds": 2.15
+      "output": 660,
+      "elapsed_seconds": 1.88
     },
     {
       "name": "filter_unsupported",
-      "input": 703,
-      "output": 703,
-      "elapsed_seconds": 0.01
+      "input": 660,
+      "output": 659,
+      "elapsed_seconds": 0.02
     },
     {
       "name": "normalize",
-      "input": 703,
-      "output": 703,
-      "elapsed_seconds": 0.01
+      "input": 659,
+      "output": 659,
+      "elapsed_seconds": 0.02
     },
     {
       "name": "deduplicate",
-      "input": 703,
-      "output": 646,
+      "input": 659,
+      "output": 601,
       "elapsed_seconds": 0.0
     },
     {
       "name": "cluster_analysis",
-      "input": 646,
-      "output": 646,
+      "input": 601,
+      "output": 601,
       "elapsed_seconds": 0.0
     },
     {
       "name": "blocklist_filter",
-      "input": 646,
-      "output": 471,
-      "elapsed_seconds": 30.8
+      "input": 601,
+      "output": 419,
+      "elapsed_seconds": 22.33
     },
     {
       "name": "xray_probe",
-      "input": 471,
-      "output": 303,
-      "elapsed_seconds": 185.91
+      "input": 419,
+      "output": 258,
+      "elapsed_seconds": 196.25
     },
     {
       "name": "stability_check",
-      "input": 303,
-      "output": 303,
+      "input": 258,
+      "output": 258,
       "elapsed_seconds": 0.0
     }
   ],
   "clusters": [
     {
-      "key": "vless|78.159.246.179|2053|xhttp|tls",
-      "count": 4
-    },
-    {
       "key": "vless|185.141.227.180|2053|xhttp|tls",
-      "count": 35
+      "count": 36
     },
     {
       "key": "vless|78.159.246.85|2053|xhttp|tls",
+      "count": 9
+    },
+    {
+      "key": "vless|78.159.246.179|2053|xhttp|tls",
       "count": 6
+    },
+    {
+      "key": "vless|78.159.246.85|2053|tcp|none",
+      "count": 3
     },
     {
       "key": "vless|78.159.250.84|2053|xhttp|tls",
       "count": 9
     },
     {
-      "key": "vless|185.229.9.175|443|tcp|reality",
+      "key": "vless|78.159.246.85|8443|xhttp|tls",
       "count": 4
-    },
-    {
-      "key": "vless|185.229.9.234|443|tcp|reality",
-      "count": 4
-    },
-    {
-      "key": "vless|5.35.101.42|443|tcp|reality",
-      "count": 6
-    },
-    {
-      "key": "vless|139.100.212.50|443|xhttp|tls",
-      "count": 3
     },
     {
       "key": "vless|78.159.250.84|8443|xhttp|tls",
-      "count": 3
+      "count": 5
     },
     {
-      "key": "vless|79.174.92.222|443|grpc|reality",
-      "count": 8
+      "key": "vless|87.242.95.150|8443|tcp|reality",
+      "count": 3
     },
     {
       "key": "vless|193.233.220.203|8443|xhttp|reality",
@@ -109,8 +101,12 @@
       "count": 3
     },
     {
+      "key": "vless|79.174.92.222|443|grpc|reality",
+      "count": 7
+    },
+    {
       "key": "vless|finkawwwbroy5.qcloud.surf|20324|tcp|reality",
-      "count": 5
+      "count": 6
     },
     {
       "key": "vless|sweedenqfds777.qcloud.surf|21221|tcp|reality",
@@ -188,16 +184,17 @@
   "blocklist": {
     "status": "downloaded",
     "network_count": 57202,
-    "filtered_configs": 175,
+    "filtered_configs": 182,
     "url_configured": true
   },
-  "accepted": 303,
-  "rejected": 400,
-  "finished_at": "2026-10-13T23:56:40.752258+00:00",
+  "accepted": 258,
+  "rejected": 402,
+  "finished_at": "2026-10-14T04:51:35.080066+00:00",
   "rejection_reasons": {
-    "duplicate URI": 57,
-    "blocked_ip": 175,
-    "tunnel": 134,
-    "xray": 34
+    "unsupported ML-KEM config": 1,
+    "duplicate URI": 58,
+    "blocked_ip": 182,
+    "tunnel": 128,
+    "xray": 33
   }
 }
