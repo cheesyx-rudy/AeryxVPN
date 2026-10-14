@@ -735,8 +735,9 @@ def main():
     updated = (datetime.now(timezone.utc) + timedelta(hours=3)).strftime("%d.%m.%Y %H:%M")
 
     header = (
-        "#subscription-userinfo: upload=0; download=0; total=0; expire=2524608000\n"
         "#profile-title: LIKVID VPN\n"
+        "#support-url: https://t.me/cheesyx\n"
+        "#profile-web-page-url: https://t.me/LIKVID_VPN\n"
         "#profile-update-interval: 1\n"
         f"#announce: вся важная информация в канале @LIKVID_VPN // авторы @rudy_bd @cheesyx // обновлено: {updated} | конфигов: {len(output)}"
     )
