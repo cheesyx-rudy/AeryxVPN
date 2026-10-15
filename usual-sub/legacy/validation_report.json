@@ -1,53 +1,53 @@
 {
   "pipeline": "likvid-strict-subscription",
-  "started_at": "2026-10-14T22:37:08.830503+00:00",
+  "started_at": "2026-10-15T00:51:25.840903+00:00",
   "stages": [
     {
       "name": "collect",
       "input": 0,
-      "output": 579,
-      "elapsed_seconds": 2.35
+      "output": 657,
+      "elapsed_seconds": 2.52
     },
     {
       "name": "filter_unsupported",
-      "input": 579,
-      "output": 578,
-      "elapsed_seconds": 0.01
+      "input": 657,
+      "output": 656,
+      "elapsed_seconds": 0.02
     },
     {
       "name": "normalize",
-      "input": 578,
-      "output": 578,
-      "elapsed_seconds": 0.01
+      "input": 656,
+      "output": 656,
+      "elapsed_seconds": 0.02
     },
     {
       "name": "deduplicate",
-      "input": 578,
-      "output": 488,
+      "input": 656,
+      "output": 566,
       "elapsed_seconds": 0.0
     },
     {
       "name": "cluster_analysis",
-      "input": 488,
-      "output": 488,
+      "input": 566,
+      "output": 566,
       "elapsed_seconds": 0.0
     },
     {
       "name": "blocklist_filter",
-      "input": 488,
-      "output": 342,
-      "elapsed_seconds": 33.37
+      "input": 566,
+      "output": 407,
+      "elapsed_seconds": 21.49
     },
     {
       "name": "xray_probe",
-      "input": 342,
-      "output": 244,
-      "elapsed_seconds": 124.42
+      "input": 407,
+      "output": 293,
+      "elapsed_seconds": 134.01
     },
     {
       "name": "stability_check",
-      "input": 244,
-      "output": 244,
+      "input": 293,
+      "output": 293,
       "elapsed_seconds": 0.0
     }
   ],
@@ -57,31 +57,47 @@
       "count": 42
     },
     {
-      "key": "vless|78.159.246.85|2053|xhttp|tls",
+      "key": "vless|78.159.250.84|2053|xhttp|tls",
       "count": 12
     },
     {
-      "key": "vless|37.18.14.168|2053|xhttp|tls",
-      "count": 3
-    },
-    {
-      "key": "vless|78.159.246.179|8443|xhttp|tls",
+      "key": "vless|78.159.246.179|2053|xhttp|tls",
       "count": 4
     },
     {
-      "key": "vless|79.174.92.222|443|grpc|reality",
-      "count": 9
+      "key": "vless|46.243.232.167|20010|ws|tls",
+      "count": 7
+    },
+    {
+      "key": "vless|78.159.246.179|8443|xhttp|tls",
+      "count": 5
+    },
+    {
+      "key": "vless|78.159.246.85|8443|xhttp|tls",
+      "count": 4
+    },
+    {
+      "key": "vless|78.159.250.84|8443|xhttp|tls",
+      "count": 4
     },
     {
       "key": "vless|90.156.218.163|443|tcp|reality",
       "count": 10
     },
     {
+      "key": "vless|79.174.92.222|443|grpc|reality",
+      "count": 9
+    },
+    {
       "key": "vless|185.229.9.234|443|raw|reality",
       "count": 4
     },
     {
-      "key": "vless|78.159.250.84|2053|xhttp|tls",
+      "key": "vless|37.18.14.168|2053|xhttp|tls",
+      "count": 3
+    },
+    {
+      "key": "vless|78.159.246.85|2053|xhttp|tls",
       "count": 11
     },
     {
@@ -101,20 +117,8 @@
       "count": 3
     },
     {
-      "key": "vless|78.159.246.179|2053|xhttp|tls",
-      "count": 3
-    },
-    {
-      "key": "vless|78.159.250.84|8443|xhttp|tls",
-      "count": 3
-    },
-    {
-      "key": "vless|46.243.232.167|20010|ws|tls",
-      "count": 6
-    },
-    {
       "key": "vless|90.156.218.163|443|raw|reality",
-      "count": 4
+      "count": 5
     },
     {
       "key": "vless|31.59.216.141|443|tcp|reality",
@@ -125,15 +129,7 @@
       "count": 3
     },
     {
-      "key": "vless|150.40.126.22|443|grpc|reality",
-      "count": 3
-    },
-    {
       "key": "vless|213.165.50.45|9443|tcp|reality",
-      "count": 3
-    },
-    {
-      "key": "vless|89.35.14.32|443|grpc|reality",
       "count": 3
     },
     {
@@ -152,17 +148,17 @@
   "blocklist": {
     "status": "downloaded",
     "network_count": 57247,
-    "filtered_configs": 146,
+    "filtered_configs": 159,
     "url_configured": true
   },
-  "accepted": 244,
-  "rejected": 335,
-  "finished_at": "2026-10-14T22:39:54.593486+00:00",
+  "accepted": 293,
+  "rejected": 364,
+  "finished_at": "2026-10-15T00:54:12.896074+00:00",
   "rejection_reasons": {
     "unsupported ML-KEM config": 1,
     "duplicate URI": 90,
-    "blocked_ip": 146,
-    "tunnel": 64,
-    "xray": 34
+    "blocked_ip": 159,
+    "tunnel": 73,
+    "xray": 41
   }
 }
