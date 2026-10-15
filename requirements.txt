@@ -1,4 +1,0 @@
-PyYAML>=6.0,<7.0
-requests[socks]>=2.31,<3.0
-loguru>=0.7,<1.0
-pydantic-settings>=2.2,<3.0
