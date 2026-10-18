@@ -78,7 +78,7 @@ https://hub.mos.ru/cheesyx/cheesyx-rudy/-/raw/main/usual-sub/proxies.txt
 - Чат сообщества: https://t.me/+EZ8LP_cV1Hw4YjU0
 - Список благодетелей проекта: https://t.me/LIKVID_VPN_volunteer
 
-Оператор проекта и подписки — @rudy_bd  
+Оператор проекта и подписки — @kryesx  
 Администратор — @cheesyx
 
 По вопросам, связанным с парсером, пишите оператору проекта.
