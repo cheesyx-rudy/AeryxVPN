@@ -1,6 +1,6 @@
-# 🟡 LIKVID VPN
+# 🟡 AeryxVPN
 
-**LIKVID VPN — свобода не предмет роскоши, она должна быть доступна всем.**
+**AeryxVPN — свобода не предмет роскоши, она должна быть доступна всем.**
 
 Бесплатная агрегированная подписка с прокси-конфигурациями из открытых источников. Поддерживаются VLESS, VMess, Trojan, Hysteria2 и другие протоколы.
 
@@ -12,7 +12,7 @@
 
 **Ссылка на подписку:**
 
-https://raw.githubusercontent.com/cheesyx-rudy/LIKVID-VPN/refs/heads/main/usual-sub/legacy/proxies.txt
+https://raw.githubusercontent.com/cheesyx-rudy/AeryxVPN/refs/heads/main/usual-sub/legacy/proxies.txt
 
 ### Дополнительная подписка — MosHub
 
@@ -24,7 +24,7 @@ https://hub.mos.ru/cheesyx/cheesyx-rudy/-/raw/main/usual-sub/proxies.txt
 
 💼 В подписках — до 1000 конфигураций. Названия серверов определяются по геолокации IP-адресов.
 
-> **Важно:** закрытие исходного кода не влияет на ссылки подписок. Используйте прежние адреса — они остаются актуальными.
+> **Важно:** основная подписка размещена в публичном репозитории AeryxVPN. Используйте обновлённую ссылку выше.
 
 ## 📱 Рекомендуемые VPN-клиенты
 
@@ -73,7 +73,7 @@ https://hub.mos.ru/cheesyx/cheesyx-rudy/-/raw/main/usual-sub/proxies.txt
 ## 💬 Проект и контакты
 
 - Telegram-канал: [@LIKVID_VPN](https://t.me/LIKVID_VPN)
-- GitHub-репозиторий: [cheesyx-rudy/LIKVID-VPN](https://github.com/cheesyx-rudy/LIKVID-VPN)
+- GitHub-репозиторий: [cheesyx-rudy/AeryxVPN](https://github.com/cheesyx-rudy/AeryxVPN)
 - MosHub-репозиторий: [cheesyx/cheesyx-rudy](https://hub.mos.ru/cheesyx/cheesyx-rudy)
 - Чат сообщества: https://t.me/+EZ8LP_cV1Hw4YjU0
 - Список благодетелей проекта: https://t.me/LIKVID_VPN_volunteer
@@ -83,6 +83,6 @@ https://hub.mos.ru/cheesyx/cheesyx-rudy/-/raw/main/usual-sub/proxies.txt
 
 По вопросам, связанным с парсером, пишите оператору проекта.
 
-## 🛡 LIKVID VPN
+## 🛡 AeryxVPN
 
 Доступ к свободному интернету.
