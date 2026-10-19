@@ -72,14 +72,13 @@ https://hub.mos.ru/cheesyx/cheesyx-rudy/-/raw/main/usual-sub/proxies.txt
 
 ## 💬 Проект и контакты
 
-- Telegram-канал: [@LIKVID_VPN](https://t.me/LIKVID_VPN)
+- Telegram-канал: [@AeryxVPN](https://t.me/AeryxVPN)
 - GitHub-репозиторий: [cheesyx-rudy/AeryxVPN](https://github.com/cheesyx-rudy/AeryxVPN)
 - MosHub-репозиторий: [cheesyx/cheesyx-rudy](https://hub.mos.ru/cheesyx/cheesyx-rudy)
 - Чат сообщества: https://t.me/+EZ8LP_cV1Hw4YjU0
-- Список благодетелей проекта: https://t.me/LIKVID_VPN_volunteer
+- Список благодетелей проекта: https://t.me/AeryxVPN_volunteer
 
-Оператор проекта и подписки — @kryesx  
-Администратор — @cheesyx
+Оператор проекта и подписки — @cheesyx  
 
 По вопросам, связанным с парсером, пишите оператору проекта.
 
